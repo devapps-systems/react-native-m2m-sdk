@@ -9,12 +9,12 @@
 
 1. Open the application’s info.plist and add below keys. Replace existing if required
 
-- UIViewControllerBasedStatusBarAppearance with a value of NO
-- NSLocationAlwaysUsageDescription with a string value of the message you would like to be displayed to the user
-- NSLocationWhenInUseUsageDescription with a string value of the message you would like to be displayed to the user
-- NSLocationAlwaysAndWhenInUseUsageDescription with a string value of the message you would like to be displayed to the user
-- UIBackgroundModes - Item 0 = remote-notification
-- NSAppTransportSecurity - Add a key named NSAllowsArbitraryLoads with a value of YES
+- `UIViewControllerBasedStatusBarAppearance` with a value of `NO`
+- `NSLocationAlwaysUsageDescription` with a string value of the message you would like to be displayed to the user
+- `NSLocationWhenInUseUsageDescription` with a string value of the message you would like to be displayed to the user
+- `NSLocationAlwaysAndWhenInUseUsageDescription` with a string value of the message you would like to be displayed to the user
+- `UIBackgroundModes` - Item 0 = `remote-notification`
+- `NSAppTransportSecurity` - Add a key named `NSAllowsArbitraryLoads` with a value of `YES`
 
 2. Open the AppDelegate.m file and add the below import
 ```
