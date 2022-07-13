@@ -2,10 +2,14 @@
 
 ## Getting started
 
-`$ npm install https://github.com/devapps-systems/react-native-m2m-sdk --save`
+Install the RN Bridge by using the below command
+
+```
+npm install https://github.com/devapps-systems/react-native-m2m-sdk --save
+```
 
 
-### for iOS
+## Setup for iOS
 
 1. Open the application’s info.plist and add below keys. Replace existing if required
 
@@ -35,7 +39,7 @@
 }
 ```
 
-### for Android 
+## Setup Android 
 
 ## Usage
 ```javascript
