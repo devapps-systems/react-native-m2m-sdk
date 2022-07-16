@@ -1,5 +1,3 @@
-// main index.js
-
 import {
     NativeModules,
     NativeEventEmitter
@@ -21,18 +19,9 @@ const _eventHandlers = {
     engagementNotAvailable: new Map(),
     didGetAvailableOpps: new Map(),
     didReceiveDetection: new Map(),
-    didGetScanOps: new Map(),
-    didGetProducts: new Map()
 }
 
 const M2MSdkModule = {
-    // getScanLocationsWithUserId(userID) {
-    //     return M2MSdk.getScanLocationsWithUserId(userID);
-    // },
-
-    // getProductsForLocation(location) {
-    //     return M2MSdk.getProductsForLocation(location);
-    // },
 
     setTagKeyWords(tags) {
         return M2MSdk.setTagKeyWords(tags);

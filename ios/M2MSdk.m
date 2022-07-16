@@ -22,8 +22,6 @@ RCT_EXPORT_MODULE()
         @"engagementNotAvailable",
         @"didGetAvailableOpps",
         @"didReceiveDetection",
-        @"didGetScanOps",
-        @"didGetProducts"
     ];
 }
 
@@ -43,28 +41,6 @@ RCT_EXPORT_MODULE()
         [self sendEventWithName:eventName body:body];
     }
 }
-// //=====================================
-// // 1. initWithApplicationUuid
-// //=====================================
-// RCT_EXPORT_METHOD(initWithApplicationUuid:(NSString*)applicationUuid :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-//     [M2MBeaconMonitor initWithApplicationUuid:applicationUuid andDelegate:self];
-// }
-
-//=====================================
-// 2. getScanLocationsWithUserId
-//=====================================
-// RCT_EXPORT_METHOD(getScanLocationsWithUserId:(NSString*)userId :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-//     [M2MBeaconMonitor getScanLocationsWithUserId:userId andDelegate:self];
-//     resolve(@{@"status": @"success"});
-// }
-
-// //=====================================
-// // 3. getProductsForLocation
-// //=====================================
-// RCT_EXPORT_METHOD(getProductsForLocation:(NSString*)location :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
-//     [M2MBeaconMonitor getProductsForLocation:location andDelegate:self];
-//     resolve(@{@"status": @"success"});
-// }
 
 //=====================================
 // 4. setTagKeyWords
@@ -157,8 +133,7 @@ RCT_EXPORT_METHOD(requestAlways :(RCTPromiseResolveBlock)resolve rejecter:(RCTPr
 //=====================================
 RCT_EXPORT_METHOD(getM2MConfig :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     M2MConfig* config = [M2MBeaconMonitor getM2MConfig];
-    NSLog(@"Config: %@", config);
-    resolve(config);
+    resolve(@{@"status": @"success", @"config": [config dictionaryWithValuesForKeys:@[@"isStopped", @"isOptedInForGeofencing", @"isOptedInForPush"]]});
 }
 
 //=====================================
@@ -341,14 +316,6 @@ RCT_EXPORT_METHOD(isStopped :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromis
 
 -(void)didReceiveDetection:(NSDictionary*)detection{
     [self sendEventWithName:@"didReceiveDetection" body:@{@"detection" : detection}];
-}
-
--(void)didGetScanOps:(NSMutableArray*)ops{
-    [self sendEventWithName:@"didGetScanOps" body:@{@"ops" : ops}];
-}
-
--(void)didGetProducts:(NSMutableArray*)products{
-    [self sendEventWithName:@"didGetProducts" body:@{@"products" : products}];
 }
 
 @end
