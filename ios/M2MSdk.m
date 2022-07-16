@@ -43,28 +43,28 @@ RCT_EXPORT_MODULE()
         [self sendEventWithName:eventName body:body];
     }
 }
-//=====================================
-// 1. initWithApplicationUuid
-//=====================================
-RCT_EXPORT_METHOD(initWithApplicationUuid:(NSString*)applicationUuid :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    [M2MBeaconMonitor initWithApplicationUuid:applicationUuid andDelegate:self];
-}
+// //=====================================
+// // 1. initWithApplicationUuid
+// //=====================================
+// RCT_EXPORT_METHOD(initWithApplicationUuid:(NSString*)applicationUuid :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+//     [M2MBeaconMonitor initWithApplicationUuid:applicationUuid andDelegate:self];
+// }
 
 //=====================================
 // 2. getScanLocationsWithUserId
 //=====================================
-RCT_EXPORT_METHOD(getScanLocationsWithUserId:(NSString*)userId :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    [M2MBeaconMonitor getScanLocationsWithUserId:userId andDelegate:self];
-    resolve(@{@"status": @"success"});
-}
+// RCT_EXPORT_METHOD(getScanLocationsWithUserId:(NSString*)userId :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+//     [M2MBeaconMonitor getScanLocationsWithUserId:userId andDelegate:self];
+//     resolve(@{@"status": @"success"});
+// }
 
-//=====================================
-// 3. getProductsForLocation
-//=====================================
-RCT_EXPORT_METHOD(getProductsForLocation:(NSString*)location :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
-    [M2MBeaconMonitor getProductsForLocation:location andDelegate:self];
-    resolve(@{@"status": @"success"});
-}
+// //=====================================
+// // 3. getProductsForLocation
+// //=====================================
+// RCT_EXPORT_METHOD(getProductsForLocation:(NSString*)location :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
+//     [M2MBeaconMonitor getProductsForLocation:location andDelegate:self];
+//     resolve(@{@"status": @"success"});
+// }
 
 //=====================================
 // 4. setTagKeyWords
@@ -162,9 +162,9 @@ RCT_EXPORT_METHOD(getM2MConfig :(RCTPromiseResolveBlock)resolve rejecter:(RCTPro
 }
 
 //=====================================
-// 15. getVersionNum
+// 15. getVersion
 //=====================================
-RCT_EXPORT_METHOD(getVersionNum:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getVersion:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve(@{@"status": @"success", @"version":[M2MBeaconMonitor getVersionNum]});
 }
 

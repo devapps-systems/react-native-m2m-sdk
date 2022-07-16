@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: ./aar/m2msdk-google-16.0.0-3.65.570.aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/19097e679c4663602bf4dca591187587/transformed/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/19097e679c4663602bf4dca591187587/transformed/jars/libs/omsdk-android-1.3.13-Inmarket.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/19097e679c4663602bf4dca591187587/transformed/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/19097e679c4663602bf4dca591187587/transformed/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

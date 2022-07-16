@@ -26,13 +26,13 @@ const _eventHandlers = {
 }
 
 const M2MSdkModule = {
-    getScanLocationsWithUserId(userID) {
-        return M2MSdk.getScanLocationsWithUserId(userID);
-    },
+    // getScanLocationsWithUserId(userID) {
+    //     return M2MSdk.getScanLocationsWithUserId(userID);
+    // },
 
-    getProductsForLocation(location) {
-        return M2MSdk.getProductsForLocation(location);
-    },
+    // getProductsForLocation(location) {
+    //     return M2MSdk.getProductsForLocation(location);
+    // },
 
     setTagKeyWords(tags) {
         return M2MSdk.setTagKeyWords(tags);
@@ -78,8 +78,8 @@ const M2MSdkModule = {
         return M2MSdk.getM2MConfig();
     },
 
-    getVersionNum() {
-        return M2MSdk.getVersionNum();
+    getVersion() {
+        return M2MSdk.getVersion();
     },
 
     setWaitForReady(wait) {
