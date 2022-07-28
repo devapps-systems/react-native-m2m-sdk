@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class M2MSdkModule extends ReactContextBaseJavaModule implements PermissionListener, M2MListenerInterface {
@@ -63,8 +64,11 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
         HashMap tags = M2MBeaconMonitor.getTagKeywords();
         JSONObject jsonTags = new JSONObject();
         try {
-            for (Map.Entry<Object, Object> set : tags.entrySet()) {
-                jsonTags.put((String) set.getKey(), set.getValue());
+            Iterator it = tags.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry)it.next();
+                jsonTags.put((String) pair.getKey(), pair.getValue());
+                it.remove(); // avoids a ConcurrentModificationException
             }
 
             callback.invoke(new JSONObject().put("status", "success").put("tags", jsonTags.toString()));
@@ -194,13 +198,17 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
     public void onAvailableOpps(JSONObject jsonObject) {
         WritableMap params = Arguments.createMap();
 
-        if(jsonObject != null) {
-            JSONArray keys = jsonObject.names();
-            for (int i = 0; i < keys.length (); i++) {
-                String key = keys.getString(i);
-                String value = jsonObject.getString(key);
-                params.putString(key, value);
+        try {
+            if(jsonObject != null) {
+                JSONArray keys = jsonObject.names();
+                for (int i = 0; i < keys.length (); i++) {
+                    String key = keys.getString(i);
+                    String value = jsonObject.getString(key);
+                    params.putString(key, value);
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
 
         sendEvent("didGetAvailableOpps", params);
@@ -210,13 +218,17 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
     public void onDetection(JSONObject jsonObject) {
         WritableMap params = Arguments.createMap();
 
-        if(jsonObject != null) {
-            JSONArray keys = jsonObject.names();
-            for (int i = 0; i < keys.length (); i++) {
-                String key = keys.getString(i);
-                String value = jsonObject.getString(key);
-                params.putString(key, value);
+        try {
+            if(jsonObject != null) {
+                JSONArray keys = jsonObject.names();
+                for (int i = 0; i < keys.length (); i++) {
+                    String key = keys.getString(i);
+                    String value = jsonObject.getString(key);
+                    params.putString(key, value);
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
 
         sendEvent("didReceiveDetection", params);
@@ -226,13 +238,17 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
     public void onError(JSONObject jsonObject) {
         WritableMap params = Arguments.createMap();
 
-        if(jsonObject != null) {
-            JSONArray keys = jsonObject.names();
-            for (int i = 0; i < keys.length (); i++) {
-                String key = keys.getString(i);
-                String value = jsonObject.getString(key);
-                params.putString(key, value);
+        try {
+            if(jsonObject != null) {
+                JSONArray keys = jsonObject.names();
+                for (int i = 0; i < keys.length (); i++) {
+                    String key = keys.getString(i);
+                    String value = jsonObject.getString(key);
+                    params.putString(key, value);
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
 
         sendEvent("onError", params);
@@ -242,13 +258,17 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
     public void onM2mDecisionWithData(JSONObject jsonObject) {
         WritableMap params = Arguments.createMap();
 
-        if(jsonObject != null) {
-            JSONArray keys = jsonObject.names();
-            for (int i = 0; i < keys.length (); i++) {
-                String key = keys.getString(i);
-                String value = jsonObject.getString(key);
-                params.putString(key, value);
+        try {
+            if(jsonObject != null) {
+                JSONArray keys = jsonObject.names();
+                for (int i = 0; i < keys.length (); i++) {
+                    String key = keys.getString(i);
+                    String value = jsonObject.getString(key);
+                    params.putString(key, value);
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
 
         sendEvent("onM2mDecisionWithData", params);

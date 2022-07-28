@@ -19,6 +19,7 @@ npm install https://github.com/devapps-systems/react-native-m2m-sdk --save
 - `NSLocationAlwaysAndWhenInUseUsageDescription` with a string value of the message you would like to be displayed to the user
 - `UIBackgroundModes` - Item 0 = `remote-notification`
 - `NSAppTransportSecurity` - Add a key named `NSAllowsArbitraryLoads` with a value of `YES`
+- `NSUserTrackingUsageDescription` with a string value of the message you would like to be displayed to the user
 
 2. Open the AppDelegate.m file and add the below import
 ```
@@ -40,6 +41,78 @@ npm install https://github.com/devapps-systems/react-native-m2m-sdk --save
 ```
 
 ## Setup Android 
+
+1. Add the below lines to the `dependencies` section of the app module's build.gradle file
+```
+implementation files("../../node_modules/react-native-m2m-sdk/android/aar/m2msdk-google-16.0.0-3.65.570.aar")
+
+implementation 'com.google.android.gms:play-services-base:18.1.0'
+implementation 'com.google.android.gms:play-services-ads:21.1.0'
+
+implementation 'com.google.dagger:dagger:2.28.3'
+implementation 'com.google.dagger:dagger-android-support:2.11'
+implementation 'com.jakewharton.timber:timber:4.7.1'
+```
+
+2. Open `MainApplication.java` and add the below import:
+```
+import com.inmarket.m2m.M2MBeaconMonitor;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
+import android.graphics.Color;
+```
+
+3. In the `onCreate` method, add the below code:
+```
+M2MBeaconMonitor.initApplication(this, "YOUR_APPLICATION_UUID");
+
+String id = "m2m_sdk_channel";
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    NotificationManager mNotificationManager =
+            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    CharSequence name = "M2M SDK Channel";
+    String description = "M2M SDK Notification Channel";
+    int importance = NotificationManager.IMPORTANCE_HIGH;
+    NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+    mChannel.setDescription(description);
+    mChannel.enableLights(true);
+    mChannel.setLightColor(Color.RED);
+    mChannel.enableVibration(true);
+    mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+    mNotificationManager.createNotificationChannel(mChannel);
+}
+
+// mandatory if you target O or beyond
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    M2MBeaconMonitor.setNotificationChannelId(id);
+}
+```
+
+4. Inside the project level build.gradle file, add the below classpath inside `dependencies`
+```
+classpath 'com.google.gms:google-services:4.3.13'
+```
+
+5. In the app module's build.gradle file add the below plugin at the top:
+```
+apply plugin: 'com.google.gms.google-services'
+```
+
+6. In the app module's AndroidManifest.xml file, add the below lines:
+```
+ <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+```
+
+7. Create a integers.xml file under `res/values` with the below content:
+```
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="google_play_services_version">12451000</integer>
+</resources>
+```
 
 ## Usage
 ```javascript
