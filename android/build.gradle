@@ -56,13 +56,23 @@ repositories {
         // Android JSC is installed from npm
         url "$rootDir/../node_modules/jsc-android/dist"
     }
+    maven {
+        credentials{
+            username 'm2m_pub'
+            password 'Cpts1350!'
+        }
+        url 'https://artifacts.inmarket.com/artifactory/sun'
+    }
 }
 
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
     implementation fileTree(dir: "libs", include: ["*.aar"])
-    implementation fileTree(dir: 'aar', include: ['*.aar', '*.jar'], exclude: [])
+
+    implementation (group: 'com.inmarket', name: 'm2msdk-google-18.0.0', version: '3.69.582') {
+        transitive = true
+    }
 }
 
 

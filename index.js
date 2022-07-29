@@ -23,6 +23,7 @@ const _eventHandlers = {
 
 const M2MSdkModule = {
 
+    /* Common methods */
     setTagKeyWords(tags) {
         return M2MSdk.setTagKeyWords(tags);
     },
@@ -49,18 +50,6 @@ const M2MSdkModule = {
 
     startMonitoring() {
         return M2MSdk.startMonitoring();
-    },
-
-    requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime(flag) {
-        return M2MSdk.requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime(flag);
-    },
-
-    requestWhenInUse() {
-        return M2MSdk.requestWhenInUse();
-    },
-
-    requestAlways() {
-        return M2MSdk.requestAlways();
     },
 
     getM2MConfig() {
@@ -93,6 +82,46 @@ const M2MSdkModule = {
 
     isStopped() {
         return M2MSdk.isStopped();
+    },
+
+    /* iOS specific */
+
+    requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime(flag) {
+        return M2MSdk.requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime(flag);
+    },
+
+    requestWhenInUse() {
+        return M2MSdk.requestWhenInUse();
+    },
+
+    requestAlways() {
+        return M2MSdk.requestAlways();
+    },
+    
+    /* Android specific */
+
+    setPublisherUserId(publisherID) {
+        return M2MSdk.setPublisherUserId(publisherID);
+    },
+
+    requestLocationPermission(startServiceOnGrant) {
+        return M2MSdk.requestLocationPermission(startServiceOnGrant);
+    },
+
+    requestFineLocationPermission(startServiceOnGrant) {
+        return M2MSdk.requestFineLocationPermission(startServiceOnGrant);
+    },
+
+    requestBackgroundLocationPermission() {
+        return M2MSdk.requestBackgroundLocationPermission();
+    },
+
+    requestForegroundLocationPermission(startServiceOnGrant) {
+        return M2MSdk.requestForegroundLocationPermission(startServiceOnGrant);
+    },
+
+    getLocalNotificationEnabled() {
+        return M2MSdk.getLocalNotificationEnabled();
     },
 
     addEventListener(type, handler) {

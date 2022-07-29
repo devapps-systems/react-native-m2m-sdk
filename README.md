@@ -42,6 +42,26 @@ npm install https://github.com/devapps-systems/react-native-m2m-sdk --save
 
 ## Setup Android 
 
+1. Open the `settings.gradle` file from the project and add the below content at the bottom:
+```
+dependencyResolutionManagement {
+    //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(org.gradle.api.initialization.resolve.RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven {
+            credentials{
+                username 'm2m_pub'
+                password 'Cpts1350!'
+            }
+            url 'https://artifacts.inmarket.com/artifactory/sun'
+        }
+    }
+}
+```
+
 1. Add the below lines to the `dependencies` section of the app module's build.gradle file
 ```
 implementation files("../../node_modules/react-native-m2m-sdk/android/aar/m2msdk-google-16.0.0-3.65.570.aar")
