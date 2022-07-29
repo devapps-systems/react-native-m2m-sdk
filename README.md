@@ -62,7 +62,18 @@ dependencyResolutionManagement {
 }
 ```
 
-1. Add the below lines to the `dependencies` section of the app module's build.gradle file
+2. Inside the project level `build.gradle` file, add below section to the `respositories` under `allprojects`:
+```
+maven {
+    credentials{
+        username 'm2m_pub'
+        password 'Cpts1350!'
+    }
+    url 'https://artifacts.inmarket.com/artifactory/sun'
+}
+```
+
+3. Add the below lines to the `dependencies` section of the app module's build.gradle file
 ```
 implementation files("../../node_modules/react-native-m2m-sdk/android/aar/m2msdk-google-16.0.0-3.65.570.aar")
 
@@ -74,7 +85,7 @@ implementation 'com.google.dagger:dagger-android-support:2.11'
 implementation 'com.jakewharton.timber:timber:4.7.1'
 ```
 
-2. Open `MainApplication.java` and add the below import:
+4. Open `MainApplication.java` and add the below import:
 ```
 import com.inmarket.m2m.M2MBeaconMonitor;
 import android.app.NotificationChannel;
@@ -83,7 +94,7 @@ import android.os.Build;
 import android.graphics.Color;
 ```
 
-3. In the `onCreate` method, add the below code:
+5. In the `onCreate` method, add the below code:
 ```
 M2MBeaconMonitor.initApplication(this, "YOUR_APPLICATION_UUID");
 
@@ -109,24 +120,24 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 }
 ```
 
-4. Inside the project level build.gradle file, add the below classpath inside `dependencies`
+6. Inside the project level build.gradle file, add the below classpath inside `dependencies`
 ```
 classpath 'com.google.gms:google-services:4.3.13'
 ```
 
-5. In the app module's build.gradle file add the below plugin at the top:
+7. In the app module's build.gradle file add the below plugin at the top:
 ```
 apply plugin: 'com.google.gms.google-services'
 ```
 
-6. In the app module's AndroidManifest.xml file, add the below lines:
+8. In the app module's AndroidManifest.xml file, add the below lines:
 ```
  <meta-data
         android:name="com.google.android.gms.version"
         android:value="@integer/google_play_services_version" />
 ```
 
-7. Create a integers.xml file under `res/values` with the below content:
+9. Create a integers.xml file under `res/values` with the below content:
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <resources>

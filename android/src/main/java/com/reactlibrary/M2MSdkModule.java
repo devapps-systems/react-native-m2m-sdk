@@ -7,10 +7,12 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.PermissionListener;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class M2MSdkModule extends ReactContextBaseJavaModule implements PermissionListener, M2MListenerInterface {
     private static final String TAG = M2MSdkModule.class.getSimpleName();
@@ -48,18 +51,19 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
      *****************************************/
 
     @ReactMethod
-    public void setTagKeywords(JSONObject tags, Callback callback) {
+    public void setTagKeywords(String tags, Promise promise) {
         try {
-            HashMap<String, String> tagsMap = toMap(tags);
+            HashMap<String,String> tagsMap = toMap(new JSONObject(tags));
+
             M2MBeaconMonitor.setTagKeywords(tagsMap);
-            callback.invoke(new JSONObject().put("status", "success").toString());
+            promise.resolve(new JSONObject().put("status", "success").toString());
         } catch (Exception ex) {
-            callback.invoke("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
+            promise.resolve("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
         }
     }
 
     @ReactMethod
-    public void getTagKeywords(Callback callback) {
+    public void getTagKeywords(Promise promise) {
         HashMap tags = M2MBeaconMonitor.getTagKeywords();
         JSONObject jsonTags = new JSONObject();
         try {
@@ -70,9 +74,9 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
                 it.remove(); // avoids a ConcurrentModificationException
             }
 
-            callback.invoke(new JSONObject().put("status", "success").put("tags", jsonTags.toString()));
+            promise.resolve((new JSONObject().put("status", "success").put("tags", jsonTags.toString())).toString());
         } catch (Exception ex) {
-            callback.invoke("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
+            promise.resolve("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
         }
     }
 
@@ -82,151 +86,143 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
     }
 
     @ReactMethod
-    public void checkInToOpp(String placeID, Callback callback) {
+    public void checkInToOpp(String placeID, Promise promise) {
+        M2MBeaconMonitor.checkInToOpp(placeID);
+        promise.resolve("{\"status\": \"success\"}");
+    }
+
+    @ReactMethod
+    public void setPushToken(String registrationID, Promise promise) {
+        M2MBeaconMonitor.setPushToken(reactContext, registrationID);
+        promise.resolve("{\"status\": \"success\"}");
+    }
+
+    @ReactMethod
+    public void stopService(Promise promise) {
+        M2MBeaconMonitor.stopService(reactContext);
+        promise.resolve("{\"status\": \"success\"}");
+    }
+
+    @ReactMethod
+    public void startMonitoring(Promise promise) {
+        if(M2MBeaconMonitor.checkLocationPermission(reactContext)) {
+            M2MBeaconMonitor.startM2MService(this);
+        } else {
+            M2MBeaconMonitor.requestLocationPermission(getCurrentActivity(), true);
+        }
+        promise.resolve("{\"status\": \"success\"}");
+    }
+
+    @ReactMethod
+    public void getM2MConfig(Promise promise) {
         try {
-            M2MBeaconMonitor.checkInToOpp(placeID);
-            callback.invoke(new JSONObject().put("status", "success").toString());
+            M2MConfig config = M2MBeaconMonitor.getConfig();
+            JSONObject configJSON = new JSONObject();
+            configJSON.put("isStopped", !M2MBeaconMonitor.isServiceStarted());
+            configJSON.put("isOptedInForGeofencing", config.isOptedInForGeofencing());
+            configJSON.put("isOptedInForPush", config.isOptedInForPush());
+            promise.resolve("{\"status\": \"success\", \"config\": \"" + configJSON.toString() + "\"}");
         } catch (Exception ex) {
-            callback.invoke("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
+            promise.resolve("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
         }
     }
 
     @ReactMethod
-    public void setPushToken(String registrationID, Callback callback) {
+    public void getVersion(Promise promise) {
         try {
-            M2MBeaconMonitor.setPushToken(reactContext, registrationID);
-            callback.invoke(new JSONObject().put("status", "success").toString());
+            promise.resolve(new JSONObject().put("status", "success").put("version", M2MBeaconMonitor.getVersion()).toString());
         } catch (Exception ex) {
-            callback.invoke("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
+            promise.resolve("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
         }
     }
 
     @ReactMethod
-    public void stopService(Callback callback) {
-        try {
-            M2MBeaconMonitor.stopService(reactContext);
-            callback.invoke("{\"status\", \"success\"}");
-        } catch (Exception ex) {
-            callback.invoke("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
-        }
-    }
-
-    @ReactMethod
-    public void startMonitoring(Callback callback) {
-        try {
-            if(M2MBeaconMonitor.checkLocationPermission(reactContext)) {
-                M2MBeaconMonitor.startM2MService(this);
-            } else {
-                M2MBeaconMonitor.requestLocationPermission(reactContext.getCurrentActivity(), true);
-            }
-            callback.invoke("{\"status\", \"success\"}");
-        } catch (Exception ex) {
-            callback.invoke("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
-        }
-    }
-
-    @ReactMethod
-    public void getM2MConfig(Callback callback) {
-        M2MConfig config = M2MBeaconMonitor.getConfig();
-        callback.invoke("{\"status\", \"success\", \"config\", \"" + ((config != null) ? config.toString() : "null") + "\"}");
-    }
-
-    @ReactMethod
-    public void getVersion(Callback callback) {
-        try {
-            callback.invoke(new JSONObject().put("status", "success").put("version", M2MBeaconMonitor.getVersion()).toString());
-        } catch (Exception ex) {
-            callback.invoke("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
-        }
-    }
-
-    @ReactMethod
-    public void setWaitForReady(boolean wait, Callback callback) {
+    public void setWaitForReady(boolean wait, Promise promise) {
         M2MBeaconMonitor.setWaitForReady(wait);
-        callback.invoke("{\"status\", \"success\"}");
+        promise.resolve("{\"status\": \"success\"}");
     }
 
     @ReactMethod
-    public void readyForEngagement(Callback callback) {
+    public void readyForEngagement(Promise promise) {
         M2MBeaconMonitor.readyForEngagement();
-        callback.invoke("{\"status\", \"success\"}");
+        promise.resolve("{\"status\": \"success\"}");
     }
 
     @ReactMethod
-    public void isEngagementReady(Callback callback) {
-        callback.invoke("{\"status\", \"success\", \"isEngagementReady\", \"" + (M2MBeaconMonitor.isEngagementReady() ? "true" : "false") + "\"}");
+    public void isEngagementReady(Promise promise) {
+        promise.resolve("{\"status\": \"success\", \"isEngagementReady\": \"" + (M2MBeaconMonitor.isEngagementReady() ? "true" : "false") + "\"}");
     }
 
     @ReactMethod
-    public void isOptedInForGeofencing(Callback callback) {
-        callback.invoke("{\"status\", \"success\", \"isOptedInForGeofencing\", \"" + (M2MBeaconMonitor.getConfig().isOptedInForGeofencing() ? "true" : "false") + "\"}");
+    public void isOptedInForGeofencing(Promise promise) {
+        promise.resolve("{\"status\": \"success\", \"isOptedInForGeofencing\": \"" + (M2MBeaconMonitor.getConfig().isOptedInForGeofencing() ? "true" : "false") + "\"}");
     }
 
     @ReactMethod
-    public void isOptedInForPush(Callback callback) {
-        callback.invoke("{\"status\", \"success\", \"isOptedInForPush\", \"" + (M2MBeaconMonitor.getConfig().isOptedInForPush() ? "true" : "false") + "\"}");
+    public void isOptedInForPush(Promise promise) {
+        promise.resolve("{\"status\", \"success\", \"isOptedInForPush\": \"" + (M2MBeaconMonitor.getConfig().isOptedInForPush() ? "true" : "false") + "\"}");
     }
 
     @ReactMethod
-    public void isStopped(Callback callback) {
-        callback.invoke("{\"status\", \"success\", \"isStopped\", \"" + (!M2MBeaconMonitor.isServiceStarted() ? "true" : "false") + "\"}");
+    public void isStopped(Promise promise) {
+        promise.resolve("{\"status\": \"success\", \"isStopped\": \"" + (!M2MBeaconMonitor.isServiceStarted() ? "true" : "false") + "\"}");
     }
 
     /****************************************
      * iOS Specific method implementation
     *****************************************/
     @ReactMethod
-    public void requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime(boolean flag, Callback callback) {
-        callback.invoke("{\"status\", \"error\", \"message\": \"Not available for Android.\"}");
+    public void requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime(boolean flag, Promise promise) {
+        promise.resolve("{\"status\": \"error\", \"message\": \"Not available for Android.\"}");
     }
 
     @ReactMethod
-    public void requestWhenInUse(Callback callback) {
-        callback.invoke("{\"status\", \"error\", \"message\": \"Not available for Android.\"}");
+    public void requestWhenInUse(Promise promise) {
+        promise.resolve("{\"status\": \"error\", \"message\": \"Not available for Android.\"}");
     }
 
     @ReactMethod
-    public void requestAlways(Callback callback) {
-        callback.invoke("{\"status\", \"error\", \"message\": \"Not available for Android.\"}");
+    public void requestAlways(Promise promise) {
+        promise.resolve("{\"status\": \"error\", \"message\": \"Not available for Android.\"}");
     }
 
     /****************************************
      * Android Specific method implementation
      *****************************************/
     @ReactMethod
-    public void setPublisherUserId(String publisherID, Callback callback) {
+    public void setPublisherUserId(String publisherID, Promise promise) {
         M2MBeaconMonitor.setPublisherUserId(publisherID);
-        callback.invoke("{\"status\", \"success\"}");
+        promise.resolve("{\"status\": \"success\"}");
     }
 
     @ReactMethod
-    public void requestLocationPermission(boolean startServiceOnGrant, Callback callback) {
-        M2MBeaconMonitor.requestLocationPermission(reactContext.getCurrentActivity(), startServiceOnGrant);
-        callback.invoke("{\"status\", \"success\"}");
+    public void requestLocationPermission(boolean startServiceOnGrant, Promise promise) {
+        M2MBeaconMonitor.requestLocationPermission(getCurrentActivity(), startServiceOnGrant);
+        promise.resolve("{\"status\": \"success\"}");
     }
 
     @ReactMethod
-    public void requestFineLocationPermission(boolean startServiceOnGrant, Callback callback) {
-        M2MBeaconMonitor.requestFineLocationPermission(reactContext.getCurrentActivity(), startServiceOnGrant);
-        callback.invoke("{\"status\", \"success\"}");
+    public void requestFineLocationPermission(boolean startServiceOnGrant, Promise promise) {
+        M2MBeaconMonitor.requestFineLocationPermission(getCurrentActivity(), startServiceOnGrant);
+        promise.resolve("{\"status\": \"success\"}");
     }
 
     @ReactMethod
-    public void requestBackgroundLocationPermission(Callback callback) {
-        M2MBeaconMonitor.requestBackgroundLocationPermission(reactContext.getCurrentActivity());
-        callback.invoke("{\"status\", \"success\"}");
+    public void requestBackgroundLocationPermission(Promise promise) {
+        M2MBeaconMonitor.requestBackgroundLocationPermission(getCurrentActivity());
+        promise.resolve("{\"status\": \"success\"}");
     }
 
     @ReactMethod
-    public void requestForegroundLocationPermission(boolean startServiceOnGrant, Callback callback) {
-        M2MBeaconMonitor.requestForegroundLocationPermission(reactContext.getCurrentActivity(), startServiceOnGrant);
-        callback.invoke("{\"status\", \"success\"}");
+    public void requestForegroundLocationPermission(boolean startServiceOnGrant, Promise promise) {
+        M2MBeaconMonitor.requestForegroundLocationPermission(getCurrentActivity(), startServiceOnGrant);
+        promise.resolve("{\"status\": \"success\"}");
     }
 
     @ReactMethod
-    public void getLocalNotificationEnabled(Callback callback) {
-        M2MBeaconMonitor.getLocalNotificationEnabled()
-        callback.invoke("{\"status\", \"success\"}");
+    public void getLocalNotificationEnabled(Promise promise) {
+        M2MBeaconMonitor.getLocalNotificationEnabled();
+        promise.resolve("{\"status\": \"success\"}");
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

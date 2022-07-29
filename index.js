@@ -24,8 +24,8 @@ const _eventHandlers = {
 const M2MSdkModule = {
 
     /* Common methods */
-    setTagKeyWords(tags) {
-        return M2MSdk.setTagKeyWords(tags);
+    setTagKeywords(tags) {
+        return M2MSdk.setTagKeywords(tags);
     },
 
     getTagKeywords() {

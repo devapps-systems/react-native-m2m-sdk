@@ -69,7 +69,7 @@ RCT_EXPORT_MODULE()
 //=====================================
 // 4. setTagKeyWords
 //=====================================
-RCT_EXPORT_METHOD(setTagKeyWords:(NSDictionary*)tags :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(setTagKeywords:(NSDictionary*)tags :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     if(tags == nil) {
         resolve(@{@"status": @"error", @"message": @"No tags provided."});
     }
