@@ -120,4 +120,55 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 ## Usage
 ```javascript
 import M2MSdk from 'react-native-m2m-sdk';
+
+// Add the event listeners
+React.useEffect(() => {
+    M2MSdkModule.addEventListener("onM2mDecisionWithData", _onM2mDecisionWithData);
+    M2MSdkModule.addEventListener("onM2MServiceStarted", _onM2MServiceStarted);
+    M2MSdkModule.addEventListener("onM2MServiceStopped", _onM2MServiceStopped);
+    M2MSdkModule.addEventListener("didShowEngagement", _didShowEngagement);
+    M2MSdkModule.addEventListener("didDismissEngagement", _didDismissEngagement);
+    M2MSdkModule.addEventListener("didReceiveEngagement", _didReceiveEngagement);
+    M2MSdkModule.addEventListener("onError", _onError);
+    M2MSdkModule.addEventListener("onWebViewIntegrityError", _onWebViewIntegrityError);
+    M2MSdkModule.addEventListener("engagementNotAvailable", _engagementNotAvailable);
+    M2MSdkModule.addEventListener("didGetAvailableOpps", _didGetAvailableOpps);
+    M2MSdkModule.addEventListener("didReceiveDetection", _didReceiveDetection);
+    return () => {
+      M2MSdkModule.removeEventListener("onM2mDecisionWithData", _onM2mDecisionWithData);
+      M2MSdkModule.removeEventListener("onM2MServiceStarted", _onM2MServiceStarted);
+      M2MSdkModule.removeEventListener("onM2MServiceStopped", _onM2MServiceStopped);
+      M2MSdkModule.removeEventListener("didShowEngagement", _didShowEngagement);
+      M2MSdkModule.removeEventListener("didDismissEngagement", _didDismissEngagement);
+      M2MSdkModule.removeEventListener("didReceiveEngagement", _didReceiveEngagement);
+      M2MSdkModule.removeEventListener("onError", _onError);
+      M2MSdkModule.removeEventListener("onWebViewIntegrityError", _onWebViewIntegrityError);
+      M2MSdkModule.removeEventListener("engagementNotAvailable", _engagementNotAvailable);
+      M2MSdkModule.removeEventListener("didGetAvailableOpps", _didGetAvailableOpps);
+      M2MSdkModule.removeEventListener("didReceiveDetection", _didReceiveDetection);
+    };
+  }, []);
+
+  const _onM2MServiceStarted = () => {
+    
+  }
+
+  const _onError = (error) => {
+    
+  }
+
+  const _didReceiveDetection = (detection) => {
+    
+  }
+  // And so on...
+```
+
+**Sample Call:**
+```
+const requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime = () => {
+    M2MSdkModule.requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime(true)
+      .then((response) => {
+        showAlertMessage(JSON.stringify(respons, null, 4));
+    });
+}
 ```
