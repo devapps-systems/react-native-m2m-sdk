@@ -67,12 +67,17 @@ RCT_EXPORT_MODULE()
 // }
 
 //=====================================
-// 4. setTagKeyWords
+// 4. setTagKeywords
 //=====================================
-RCT_EXPORT_METHOD(setTagKeywords:(NSDictionary*)tags :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    if(tags == nil) {
+RCT_EXPORT_METHOD(setTagKeywords:(NSString*)tagsString :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    if(tagsString == nil) {
         resolve(@{@"status": @"error", @"message": @"No tags provided."});
     }
+
+    NSData *tagsData = [tagsString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *tags = [NSJSONSerialization JSONObjectWithData:tagsData
+                                      options:NSJSONReadingMutableContainers 
+                                        error:nil];
     
     [M2MBeaconMonitor setTagKeyWords:tags];
     resolve(@{@"status": @"success"});
@@ -129,7 +134,7 @@ RCT_EXPORT_METHOD(startMonitoring :(RCTPromiseResolveBlock)resolve rejecter:(RCT
 //=====================================
 // 11. requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime
 //=====================================
-RCT_EXPORT_METHOD(requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime :(BOOL)flag:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
+RCT_EXPORT_METHOD(requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime :(BOOL)flag :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
     dispatch_async(dispatch_get_main_queue(), ^{
         [M2MBeaconMonitor requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime:flag];
     });
@@ -223,15 +228,19 @@ RCT_EXPORT_METHOD(isStopped :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromis
 // ANDROID SPECIFIC METHODS IMPLEMENTATION STARTS
 //===============================================
 
-RCT_EXPORT_METHOD(setPublisherUserId :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(isDemoModeOn :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve(@{@"status": @"error", @"message": @"Not available for iOS."});
 }
 
-RCT_EXPORT_METHOD(requestLocationPermission :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(setPublisherUserId :(NSString *) publisherUserId :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve(@{@"status": @"error", @"message": @"Not available for iOS."});
 }
 
-RCT_EXPORT_METHOD(requestFineLocationPermission :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(requestLocationPermission :(BOOL)startServiceOnGrant :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    resolve(@{@"status": @"error", @"message": @"Not available for iOS."});
+}
+
+RCT_EXPORT_METHOD(requestFineLocationPermission :(BOOL)startServiceOnGrant :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve(@{@"status": @"error", @"message": @"Not available for iOS."});
 }
 
@@ -239,7 +248,7 @@ RCT_EXPORT_METHOD(requestBackgroundLocationPermission :(RCTPromiseResolveBlock)r
     resolve(@{@"status": @"error", @"message": @"Not available for iOS."});
 }
 
-RCT_EXPORT_METHOD(requestForegroundLocationPermission :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(requestForegroundLocationPermission :(BOOL)startServiceOnGrant :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve(@{@"status": @"error", @"message": @"Not available for iOS."});
 }
 
