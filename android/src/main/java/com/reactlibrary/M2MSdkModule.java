@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.PermissionListener;
+import com.google.gson.Gson;
 import com.inmarket.m2m.M2MBeaconMonitor;
 import com.inmarket.m2m.M2MConfig;
 import com.inmarket.m2m.M2MListenerInterface;
@@ -56,9 +57,10 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
             HashMap<String,String> tagsMap = toMap(new JSONObject(tags));
 
             M2MBeaconMonitor.setTagKeywords(tagsMap);
-            promise.resolve(new JSONObject().put("status", "success").toString());
+            promise.resolve(new JSONObject().put("status", "success"));
         } catch (Exception ex) {
-            promise.resolve("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
         }
     }
 
@@ -74,9 +76,10 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
                 it.remove(); // avoids a ConcurrentModificationException
             }
 
-            promise.resolve((new JSONObject().put("status", "success").put("tags", jsonTags.toString())).toString());
+            promise.resolve((new JSONObject().put("status", "success").put("tags", jsonTags)));
         } catch (Exception ex) {
-            promise.resolve("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
         }
     }
 
@@ -88,19 +91,34 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
     @ReactMethod
     public void checkInToOpp(String placeID, Promise promise) {
         M2MBeaconMonitor.checkInToOpp(placeID);
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void setPushToken(String registrationID, Promise promise) {
         M2MBeaconMonitor.setPushToken(reactContext, registrationID);
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void stopService(Promise promise) {
         M2MBeaconMonitor.stopService(reactContext);
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
@@ -110,7 +128,12 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
         } else {
             M2MBeaconMonitor.requestLocationPermission(getCurrentActivity(), true);
         }
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
@@ -121,51 +144,83 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
             configJSON.put("isStopped", !M2MBeaconMonitor.isServiceStarted());
             configJSON.put("isOptedInForGeofencing", config.isOptedInForGeofencing());
             configJSON.put("isOptedInForPush", config.isOptedInForPush());
-            promise.resolve("{\"status\": \"success\", \"config\": \"" + configJSON.toString() + "\"}");
+            promise.resolve(new JSONObject().put("status", "success").put("config", configJSON));
         } catch (Exception ex) {
-            promise.resolve("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
         }
     }
 
     @ReactMethod
     public void getVersion(Promise promise) {
         try {
-            promise.resolve(new JSONObject().put("status", "success").put("version", M2MBeaconMonitor.getVersion()).toString());
+            promise.resolve(new JSONObject().put("status", "success").put("version", M2MBeaconMonitor.getVersion()));
         } catch (Exception ex) {
-            promise.resolve("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}");
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
         }
     }
 
     @ReactMethod
     public void setWaitForReady(boolean wait, Promise promise) {
         M2MBeaconMonitor.setWaitForReady(wait);
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void readyForEngagement(Promise promise) {
         M2MBeaconMonitor.readyForEngagement();
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void isEngagementReady(Promise promise) {
-        promise.resolve("{\"status\": \"success\", \"isEngagementReady\": \"" + (M2MBeaconMonitor.isEngagementReady() ? "true" : "false") + "\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success").put("isEngagementReady", (M2MBeaconMonitor.isEngagementReady() ? "true" : "false"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void isOptedInForGeofencing(Promise promise) {
-        promise.resolve("{\"status\": \"success\", \"isOptedInForGeofencing\": \"" + (M2MBeaconMonitor.getConfig().isOptedInForGeofencing() ? "true" : "false") + "\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success").put("isOptedInForGeofencing", (M2MBeaconMonitor.getConfig().isOptedInForGeofencing() ? "true" : "false"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void isOptedInForPush(Promise promise) {
-        promise.resolve("{\"status\", \"success\", \"isOptedInForPush\": \"" + (M2MBeaconMonitor.getConfig().isOptedInForPush() ? "true" : "false") + "\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success").put("isOptedInForPush", (M2MBeaconMonitor.getConfig().isOptedInForPush() ? "true" : "false"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void isStopped(Promise promise) {
-        promise.resolve("{\"status\": \"success\", \"isStopped\": \"" + (!M2MBeaconMonitor.isServiceStarted() ? "true" : "false") + "\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success").put("isStopped", (!M2MBeaconMonitor.isServiceStarted() ? "true" : "false"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     /****************************************
@@ -173,17 +228,32 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
     *****************************************/
     @ReactMethod
     public void requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime(boolean flag, Promise promise) {
-        promise.resolve("{\"status\": \"error\", \"message\": \"Not available for Android.\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "error").put("message", "Not available for Android."));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": \"Not available for Android.\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void requestWhenInUse(Promise promise) {
-        promise.resolve("{\"status\": \"error\", \"message\": \"Not available for Android.\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "error").put("message", "Not available for Android."));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": \"Not available for Android.\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void requestAlways(Promise promise) {
-        promise.resolve("{\"status\": \"error\", \"message\": \"Not available for Android.\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "error").put("message", "Not available for Android."));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": \"Not available for Android.\"}", JSONObject.class));
+        }
     }
 
     /****************************************
@@ -192,37 +262,67 @@ public class M2MSdkModule extends ReactContextBaseJavaModule implements Permissi
     @ReactMethod
     public void setPublisherUserId(String publisherID, Promise promise) {
         M2MBeaconMonitor.setPublisherUserId(publisherID);
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void requestLocationPermission(boolean startServiceOnGrant, Promise promise) {
         M2MBeaconMonitor.requestLocationPermission(getCurrentActivity(), startServiceOnGrant);
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void requestFineLocationPermission(boolean startServiceOnGrant, Promise promise) {
         M2MBeaconMonitor.requestFineLocationPermission(getCurrentActivity(), startServiceOnGrant);
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void requestBackgroundLocationPermission(Promise promise) {
         M2MBeaconMonitor.requestBackgroundLocationPermission(getCurrentActivity());
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void requestForegroundLocationPermission(boolean startServiceOnGrant, Promise promise) {
         M2MBeaconMonitor.requestForegroundLocationPermission(getCurrentActivity(), startServiceOnGrant);
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     @ReactMethod
     public void getLocalNotificationEnabled(Promise promise) {
         M2MBeaconMonitor.getLocalNotificationEnabled();
-        promise.resolve("{\"status\": \"success\"}");
+        try {
+            promise.resolve(new JSONObject().put("status", "success"));
+        } catch (Exception ex) {
+            Gson gson = new Gson();
+            promise.resolve(gson.fromJson("{\"status\":\"error\", \"message\": " + ex.getMessage() + "\"}", JSONObject.class));
+        }
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

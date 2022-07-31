@@ -6,6 +6,7 @@ Install the RN Bridge by using the below command
 
 ```
 npm install https://github.com/devapps-systems/react-native-m2m-sdk --save
+cd ios && pod install && cd ..
 ```
 
 
@@ -40,7 +41,7 @@ npm install https://github.com/devapps-systems/react-native-m2m-sdk --save
 }
 ```
 
-## Setup Android 
+## Setup for Android 
 
 1. Open the `settings.gradle` file from the project and add the below content at the bottom:
 ```
@@ -75,14 +76,9 @@ maven {
 
 3. Add the below lines to the `dependencies` section of the app module's build.gradle file
 ```
-implementation files("../../node_modules/react-native-m2m-sdk/android/aar/m2msdk-google-16.0.0-3.65.570.aar")
-
-implementation 'com.google.android.gms:play-services-base:18.1.0'
-implementation 'com.google.android.gms:play-services-ads:21.1.0'
-
-implementation 'com.google.dagger:dagger:2.28.3'
-implementation 'com.google.dagger:dagger-android-support:2.11'
-implementation 'com.jakewharton.timber:timber:4.7.1'
+implementation (group: 'com.inmarket', name: 'm2msdk-google-18.0.0', version: '3.69.582') {
+    transitive = true
+}
 ```
 
 4. Open `MainApplication.java` and add the below import:
@@ -120,30 +116,6 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 }
 ```
 
-6. Inside the project level build.gradle file, add the below classpath inside `dependencies`
-```
-classpath 'com.google.gms:google-services:4.3.13'
-```
-
-7. In the app module's build.gradle file add the below plugin at the top:
-```
-apply plugin: 'com.google.gms.google-services'
-```
-
-8. In the app module's AndroidManifest.xml file, add the below lines:
-```
- <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
-```
-
-9. Create a integers.xml file under `res/values` with the below content:
-```
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer name="google_play_services_version">12451000</integer>
-</resources>
-```
 
 ## Usage
 ```javascript

@@ -132,33 +132,7 @@ RCT_EXPORT_METHOD(startMonitoring :(RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 //=====================================
-// 11. requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime
-//=====================================
-RCT_EXPORT_METHOD(requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime :(BOOL)flag :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [M2MBeaconMonitor requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime:flag];
-    });
-    resolve(@{@"status": @"success"});
-}
-
-//=====================================
-// 12. requestWhenInUse
-//=====================================
-RCT_EXPORT_METHOD(requestWhenInUse :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
-    [M2MBeaconMonitor requestWhenInUseWithDelegate:self];
-    resolve(@{@"status": @"success"});
-}
-
-//=====================================
-// 13. requestAlways
-//=====================================
-RCT_EXPORT_METHOD(requestAlways :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
-    [M2MBeaconMonitor requestAlwaysWithDelegate:self];
-    resolve(@{@"status": @"success"});
-}
-
-//=====================================
-// 14. getM2MConfig
+// 11. getM2MConfig
 //=====================================
 RCT_EXPORT_METHOD(getM2MConfig :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     M2MConfig* config = [M2MBeaconMonitor getM2MConfig];
@@ -167,14 +141,14 @@ RCT_EXPORT_METHOD(getM2MConfig :(RCTPromiseResolveBlock)resolve rejecter:(RCTPro
 }
 
 //=====================================
-// 15. getVersion
+// 12. getVersion
 //=====================================
 RCT_EXPORT_METHOD(getVersion:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve(@{@"status": @"success", @"version":[M2MBeaconMonitor getVersionNum]});
 }
 
 //=====================================
-// 16. setWaitForReady
+// 13. setWaitForReady
 //=====================================
 RCT_EXPORT_METHOD(setWaitForReady:(BOOL)wait :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [M2MBeaconMonitor setWaitForReady:wait];
@@ -182,7 +156,7 @@ RCT_EXPORT_METHOD(setWaitForReady:(BOOL)wait :(RCTPromiseResolveBlock)resolve re
 }
 
 //=====================================
-// 17. readyForEngagement
+// 14. readyForEngagement
 //=====================================
 RCT_EXPORT_METHOD(readyForEngagement :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     if([M2MBeaconMonitor isEngagementReady]) {
@@ -194,14 +168,14 @@ RCT_EXPORT_METHOD(readyForEngagement :(RCTPromiseResolveBlock)resolve rejecter:(
 }
 
 //=====================================
-// 18. isEngagementReady
+// 15. isEngagementReady
 //=====================================
 RCT_EXPORT_METHOD(isEngagementReady :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve(@{@"status": @"success", @"isEngagementReady": [M2MBeaconMonitor isEngagementReady] ? @"true" : @"false"});
 }
 
 //=====================================
-// 19. isOptedInForGeofencing
+// 16. isOptedInForGeofencing
 //=====================================
 RCT_EXPORT_METHOD(isOptedInForGeofencing :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     M2MConfig *config = [M2MBeaconMonitor getM2MConfig];
@@ -209,7 +183,7 @@ RCT_EXPORT_METHOD(isOptedInForGeofencing :(RCTPromiseResolveBlock)resolve reject
 }
 
 //=====================================
-// 20. isOptedInForPush
+// 17. isOptedInForPush
 //=====================================
 RCT_EXPORT_METHOD(isOptedInForPush :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     M2MConfig *config = [M2MBeaconMonitor getM2MConfig];
@@ -217,12 +191,46 @@ RCT_EXPORT_METHOD(isOptedInForPush :(RCTPromiseResolveBlock)resolve rejecter:(RC
 }
 
 //=====================================
-// 21. isStopped
+// 18. isStopped
 //=====================================
 RCT_EXPORT_METHOD(isStopped :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     M2MConfig *config = [M2MBeaconMonitor getM2MConfig];
     resolve(@{@"status": @"success", @"isStopped": config.isStopped ? @"true" : @"false"});
 }
+
+//===============================================
+// iOS SPECIFIC METHODS IMPLEMENTATION STARTS
+//===============================================
+
+//=====================================
+// 19. requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime
+//=====================================
+RCT_EXPORT_METHOD(requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime :(BOOL)flag :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [M2MBeaconMonitor requestAppTrackingPermissionAndOpenSettingsIfNotFirstTime:flag];
+    });
+    resolve(@{@"status": @"success"});
+}
+
+//=====================================
+// 20. requestWhenInUse
+//=====================================
+RCT_EXPORT_METHOD(requestWhenInUse :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
+    [M2MBeaconMonitor requestWhenInUseWithDelegate:self];
+    resolve(@{@"status": @"success"});
+}
+
+//=====================================
+// 21. requestAlways
+//=====================================
+RCT_EXPORT_METHOD(requestAlways :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
+    [M2MBeaconMonitor requestAlwaysWithDelegate:self];
+    resolve(@{@"status": @"success"});
+}
+//===============================================
+// iOS SPECIFIC METHODS IMPLEMENTATION ENDS
+//===============================================
+
 
 //===============================================
 // ANDROID SPECIFIC METHODS IMPLEMENTATION STARTS

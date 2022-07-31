@@ -73,6 +73,7 @@ dependencies {
     implementation (group: 'com.inmarket', name: 'm2msdk-google-18.0.0', version: '3.69.582') {
         transitive = true
     }
+    implementation 'com.google.code.gson:gson:2.8.9'
 }
 
 
