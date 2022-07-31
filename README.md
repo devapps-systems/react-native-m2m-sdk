@@ -62,7 +62,7 @@ dependencyResolutionManagement {
 }
 ```
 
-2. Inside the project level `build.gradle` file, add below section to the `respositories` under `allprojects`:
+2. Inside the project level `build.gradle` file, add below section to the `repositories` under `allprojects`:
 ```
 maven {
     credentials{
